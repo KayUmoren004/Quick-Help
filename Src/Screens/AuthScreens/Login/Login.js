@@ -71,19 +71,6 @@ const Login = ({ navigation }) => {
 
   //Footer Component
   const footer = (
-    // {
-    //   loading && (
-    //     <Loading />
-    //   ) : (
-    //     <AuthFooter
-    //   Name="Sign In"
-    //   Message="Don't have an account?"
-    //   onPress={() => console.log("Button Pressed")}
-    //   action="Create account"
-    //   navigate={() => navigation.navigate("SignUp")}
-    // />
-    //   )
-    // }
     <>
       {loading && <Loading />}
       {!loading && (
@@ -161,7 +148,9 @@ const Login = ({ navigation }) => {
               onSubmitEditing={() => handleSubmit()}
             />
             <View style={{ flex: 1, paddingVertical: 10, marginRight: 20 }}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("ForgotPassword")}
+              >
                 <Text
                   style={[styles.ForgotPassword, { color: Colors.AuthButton }]}
                 >

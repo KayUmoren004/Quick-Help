@@ -73,6 +73,11 @@ const Firebase = {
   signIn: async (email, password) => {
     return firebase.auth().signInWithEmailAndPassword(email, password);
   },
+
+  //Forgot Password
+  forgotPassword: async (email) => {
+    return firebase.auth().sendPasswordResetEmail(email);
+  },
 };
 
 const FirebaseProvider = (props) => {
