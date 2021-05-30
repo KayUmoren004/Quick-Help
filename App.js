@@ -1,21 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
 
-export default function App() {
+//Dependencies
+import Routes from "./Src/Stacks/Routes";
+import { StatusBar } from "react-native";
+import { UserProvider } from "./Src/Components/Context/User/UserContext";
+import { FirebaseProvider } from "./Src/Components/Context/Firebase/FirebaseContext";
+// import * as Font from "expo-font";
+// import { useFonts } from "@use-expo/font";
+
+export default App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <FirebaseProvider>
+      <UserProvider>
+        <Routes />
+        <StatusBar barStyle="default" />
+      </UserProvider>
+    </FirebaseProvider>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};
