@@ -20,9 +20,6 @@ const SignUp = ({ navigation }) => {
       .min(2, "Too Short!")
       .max(50, "Too Long!")
       .required("Required"),
-    passwordConfirmation: Yup.string()
-      .equals([Yup.ref("password")], "Passwords don't match")
-      .required("Required"),
     email: Yup.string().email("Invalid email").required("Required"),
     name: Yup.string()
       .min(2, "Your name is too short")
@@ -30,7 +27,6 @@ const SignUp = ({ navigation }) => {
   });
   //Refs
   const passwordRef = useRef();
-  const passwordConfirmation = useRef();
   const emailRef = useRef();
   //States
   const [email, setEmail] = useState();
@@ -97,13 +93,9 @@ const SignUp = ({ navigation }) => {
           passwordConfirmation: "",
         }}
         onSubmit={(values) => {
-          if (values.password === values.passwordConfirmation) {
-            setName(values.name);
-            setEmail(values.email);
-            setPassword(values.password);
-          } else {
-            console.log("Error @Validation");
-          }
+          setName(values.name);
+          setEmail(values.email);
+          setPassword(values.password);
         }}
         validationSchema={SignUpSchema}
       >
@@ -198,7 +190,7 @@ const SignUp = ({ navigation }) => {
                 returnKeyLabel="next"
                 keyboardAppearance="default"
                 onSubmitEditing={() => {
-                  passwordConfirmation.current.focus();
+                  handleSubmit();
                 }}
               />
               <Text
@@ -212,36 +204,7 @@ const SignUp = ({ navigation }) => {
                 {touched.email && errors.password}
               </Text>
             </View>
-            <View>
-              <AuthTextInput
-                ref={passwordConfirmation}
-                primaryColor={colors.primary}
-                placeholderColor={colors.placeholder}
-                TextColor={colors.text}
-                placeholder="Confirm your password"
-                onChangeText={handleChange("passwordConfirmation")}
-                onBlur={handleBlur("passwordConfirmation")}
-                error={errors.passwordConfirmation}
-                touched={touched.passwordConfirmation}
-                autoCompleteType="off"
-                autoCapitalize="none"
-                secureTextEntry
-                returnKeyType="done"
-                returnKeyLabel="done"
-                keyboardAppearance="default"
-                onSubmitEditing={() => handleSubmit()}
-              />
-              <Text
-                style={{
-                  color: "red",
-                  marginTop: 5,
-                  textAlign: "right",
-                  marginRight: 25,
-                }}
-              >
-                {touched.email && errors.passwordConfirmation}
-              </Text>
-            </View>
+
             {/* Terms and Conditions */}
           </View>
         )}

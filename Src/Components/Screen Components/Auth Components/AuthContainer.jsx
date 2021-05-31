@@ -1,9 +1,21 @@
 import React from "react";
 
 //Dependencies
-import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  TextInput,
+  Button,
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Platform,
+  Image,
+} from "react-native";
 import { useTheme } from "@react-navigation/native";
-
+import { Divider } from "react-native-paper";
 const AuthContainer = ({
   children,
   footer,
@@ -17,26 +29,28 @@ const AuthContainer = ({
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      <View>
-        <View style={styles.image}>
-          <Image
-            source={require("../../../../assets/undraw_Online_article_re_daq5.png")}
-            style={{ resizeMode: "contain", height: 44, width: 44 }}
-          />
-        </View>
-        <View style={styles.TextContainer}>
-          <Text style={[styles.Text, { color: colors.text }]}>{text}</Text>
-        </View>
-        <View style={styles.DescriptionContainer}>
-          <Text style={[styles.Description, { color: colors.text }]}>
-            {description1}
-            {"\n"}
-            {description2}
-          </Text>
-        </View>
-      </View>
-      <View style={styles.Children}>{children}</View>
-      <View style={styles.Footer}>{footer}</View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Image
+              source={require("../../../../assets/Logo.png")}
+              style={{ resizeMode: "contain", height: "30%", width: "100%" }}
+            />
+
+            <View style={styles.Children}>{children}</View>
+            <View style={styles.Footer}>{footer}</View>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -47,13 +61,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "center",
   },
   image: {
     //height: 44,
     //width: 44,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 92,
+    //marginTop: 92,
   },
   TextContainer: {
     marginTop: 35,
