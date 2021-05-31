@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 //Dependencies
 import {
@@ -13,9 +13,20 @@ import {
   TouchableWithoutFeedback,
   Platform,
   Image,
+  Dimensions,
+  Animated,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Divider } from "react-native-paper";
+
+//Dimensions
+const window = Dimensions.get("window");
+const width = window.width;
+//const iHeight = new Animated.Value(IMAGE_HEIGHT);
+//Image Height
+const IMAGE_HEIGHT = window.width / 2;
+const IMAGE_HEIGHT_SMALL = window.width / 7;
+
 const AuthContainer = ({
   children,
   footer,
@@ -25,13 +36,16 @@ const AuthContainer = ({
   description2,
 }) => {
   const { colors } = useTheme();
+
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+        style={{
+          flex: 1,
+        }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View
@@ -43,7 +57,7 @@ const AuthContainer = ({
           >
             <Image
               source={require("../../../../assets/Logo.png")}
-              style={{ resizeMode: "contain", height: "30%", width: "100%" }}
+              style={[styles.image, { resizeMode: "contain" }]}
             />
 
             <View style={styles.Children}>{children}</View>
@@ -64,11 +78,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   image: {
-    //height: 44,
-    //width: 44,
-    justifyContent: "center",
-    alignItems: "center",
-    //marginTop: 92,
+    height: "10%",
+    marginHorizontal: 10,
+    marginVertical: 5,
+    width: width - 30,
   },
   TextContainer: {
     marginTop: 35,

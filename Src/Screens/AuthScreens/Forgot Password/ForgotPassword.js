@@ -18,14 +18,16 @@ const ForgotPassword = ({ navigation }) => {
     email: Yup.string().email("Invalid email").required("Required"),
   });
   //State
-  const [email, setEmail] = useState();
+  //const [email, setEmail] = useState();
   const [loading, setLoading] = useState();
   //Context
   const firebase = useContext(FirebaseContext);
 
   //Forgot Password
-  const forgotPassword = async () => {
+  const forgotPassword = async (values) => {
     setLoading(true);
+
+    const { email } = values;
 
     try {
       await firebase.forgotPassword(email);
@@ -66,7 +68,7 @@ const ForgotPassword = ({ navigation }) => {
       <Formik
         initialValues={{ email: "" }}
         onSubmit={(values) => {
-          setEmail(values.email);
+          forgotPassword(values);
         }}
         validationSchema={ForgotPasswordSchema}
       >
@@ -79,7 +81,19 @@ const ForgotPassword = ({ navigation }) => {
           errors,
           touched,
         }) => (
-          <View>
+          <View style={styles.container}>
+            <View>
+              <View style={styles.TextContainer}>
+                <Text style={[styles.Text, { color: colors.text }]}>
+                  Reset your password
+                </Text>
+              </View>
+              <View style={styles.DescriptionContainer}>
+                <Text style={[styles.Description, { color: colors.text }]}>
+                  Enter the email address associated with your account
+                </Text>
+              </View>
+            </View>
             <AuthTextInput
               primaryColor={colors.primary}
               placeholderColor={colors.placeholder}
@@ -113,5 +127,38 @@ const ForgotPassword = ({ navigation }) => {
     </AuthContainer>
   );
 };
+
+export const styles = StyleSheet.create({
+  container: {
+    //flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  Text: {
+    width: 343,
+    height: 41,
+    fontWeight: "700",
+    fontSize: 34,
+    lineHeight: 41,
+    textAlign: "center",
+    marginHorizontal: 16,
+  },
+  Description: {
+    width: 343,
+    height: 44,
+    marginHorizontal: 16,
+    fontWeight: "400",
+    fontSize: 17,
+    lineHeight: 22,
+    textAlign: "center",
+  },
+  TextContainer: {
+    marginTop: 35,
+  },
+  DescriptionContainer: {
+    marginTop: 16,
+    marginBottom: 40,
+  },
+});
 
 export default ForgotPassword;

@@ -186,8 +186,8 @@ const SignUp = ({ navigation }) => {
                 autoCompleteType="password"
                 autoCapitalize="none"
                 secureTextEntry
-                returnKeyType="next"
-                returnKeyLabel="next"
+                returnKeyType="done"
+                returnKeyLabel="done"
                 keyboardAppearance="default"
                 onSubmitEditing={() => {
                   handleSubmit();

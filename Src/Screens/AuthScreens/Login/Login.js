@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import AuthContainer from "../../../Components/Screen Components/Auth Components/AuthContainer";
 import { Formik } from "formik";
@@ -17,6 +18,10 @@ import Colors from "../../../Components/Utils/Colors/colors";
 import AuthFooter from "../../../Components/Screen Components/Auth Components/AuthFooter";
 import { UserContext } from "../../../Components/Context/User/UserContext";
 import { FirebaseContext } from "../../../Components/Context/Firebase/FirebaseContext";
+
+//Dimensions
+const window = Dimensions.get("window");
+const width = window.width;
 
 const Login = ({ navigation }) => {
   const { colors } = useTheme();
@@ -40,8 +45,10 @@ const Login = ({ navigation }) => {
   const [_, setUser] = useContext(UserContext);
 
   //SignIn
-  const signIn = async () => {
+  const signIn = async (values) => {
     setLoading(true);
+
+    const { email, password } = values;
 
     try {
       await firebase.signIn(email, password);
@@ -95,8 +102,9 @@ const Login = ({ navigation }) => {
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={(values) => {
-          setEmail(values.email);
-          setPassword(values.password);
+          // setEmail(values.email);
+          // setPassword(values.password);
+          signIn(values);
         }}
         validationSchema={LoginSchema}
       >
@@ -155,8 +163,8 @@ const Login = ({ navigation }) => {
                 autoCompleteType="password"
                 autoCapitalize="none"
                 secureTextEntry
-                returnKeyType="next"
-                returnKeyLabel="next"
+                returnKeyType="done"
+                returnKeyLabel="done"
                 keyboardAppearance="default"
                 onSubmitEditing={() => handleSubmit()}
               />
