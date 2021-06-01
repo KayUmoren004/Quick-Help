@@ -36,8 +36,8 @@ const Login = ({ navigation }) => {
   //Set Ref's for text input
   const passwordRef = useRef();
   //States
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  //const [email, setEmail] = useState();
+  //const [password, setPassword] = useState();
   const [loading, setLoading] = useState(false);
 
   //Context
@@ -100,6 +100,7 @@ const Login = ({ navigation }) => {
       {...{ footer }}
     >
       <Formik
+        enableReinitialize
         initialValues={{ email: "", password: "" }}
         onSubmit={(values) => {
           // setEmail(values.email);

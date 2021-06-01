@@ -56,7 +56,7 @@ const AuthContainer = ({
             }}
           >
             <Image
-              source={require("../../../../assets/Logo.png")}
+              source={require("../../../../assets/LogoBg.png")}
               style={[styles.image, { resizeMode: "contain" }]}
             />
 
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   image: {
-    height: "10%",
+    height: "20%",
     marginHorizontal: 10,
     marginVertical: 5,
     width: width - 30,
