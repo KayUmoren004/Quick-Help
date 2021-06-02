@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 //Dependencies
 import { StyleSheet, Text, View, FlatList, Animated } from "react-native";
-import Slides from "../../../Components/Temps/Slides";
+import Slides from "../../Temp/Slides";
 import OnboardingItem from "./OnboardingItem";
 import Paginator from "../../../Components/Screen Components/Paginator/Paginator";
 import NextButton from "../../../Components/Screen Components/Next Button/NextButton";
