@@ -5,6 +5,7 @@ import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import AuthContainer from "../../../Components/Screen Components/Auth Components/AuthContainer";
 import { useTheme } from "@react-navigation/native";
 import AuthFooter from "../../../Components/Screen Components/Auth Components/AuthFooter";
+import AuthButton from "../../../Components/Screen Components/Auth Components/AuthButton";
 
 const PasswordChanged = ({ navigation }) => {
   //Theme
@@ -19,29 +20,11 @@ const PasswordChanged = ({ navigation }) => {
       </View>
     );
   };
-  //Footer Component
-  const footer = (
-    <>
-      {loading && <Loading />}
-      {!loading && (
-        <AuthFooter
-          Name="Sign In again"
-          onPress={() => {
-            navigation.navigate("Login");
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Login" }],
-            });
-          }}
-        />
-      )}
-    </>
-  );
+
   return (
     <AuthContainer
       text="Email Confirmation"
       description1="An email has been sent for password reset"
-      {...{ footer }}
     >
       <View style={styles.container}>
         <View style={styles.TextContainer}>
@@ -53,6 +36,21 @@ const PasswordChanged = ({ navigation }) => {
           <Text style={[styles.Description, { color: colors.text }]}>
             An email has been sent for password reset
           </Text>
+        </View>
+        <View style={styles.Footer}>
+          {loading && <Loading />}
+          {!loading && (
+            <AuthButton
+              title="Sign In again"
+              onPress={() => {
+                navigation.navigate("Login");
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: "Login" }],
+                });
+              }}
+            />
+          )}
         </View>
       </View>
     </AuthContainer>
@@ -88,6 +86,12 @@ export const styles = StyleSheet.create({
   DescriptionContainer: {
     marginTop: 16,
     marginBottom: 40,
+  },
+  Footer: {
+    //flex: 1,
+    justifyContent: "flex-end",
+    marginBottom: 36,
+    alignItems: "center",
   },
 });
 

@@ -1,51 +1,86 @@
 import React, { useContext, useRef, useState } from "react";
 
 //Dependencies
-import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import { StyleSheet, View, ActivityIndicator } from "react-native";
 import AuthContainer from "../../../Components/Screen Components/Auth Components/AuthContainer";
-import { Formik } from "formik";
 import * as Yup from "yup";
-import AuthTextInput from "../../../Components/Screen Components/Auth Components/AuthTextInput";
 import { useTheme } from "@react-navigation/native";
-import Colors from "../../../Components/Utils/Colors/colors";
 import AuthFooter from "../../../Components/Screen Components/Auth Components/AuthFooter";
 import { UserContext } from "../../../Components/Context/User/UserContext";
 import { FirebaseContext } from "../../../Components/Context/Firebase/FirebaseContext";
 
+//Form
+import Form from "../../../Components/Screen Components/Forms/Form";
+import FormField from "../../../Components/Screen Components/Forms/FormField";
+import FormButton from "../../../Components/Screen Components/Forms/FormButton";
+import FormErrorMessage from "../../../Components/Screen Components/Forms/FormErrorMessage";
+
 const SignUp = ({ navigation }) => {
-  const { colors } = useTheme();
   //Yup Validation Schema
   const SignUpSchema = Yup.object().shape({
-    password: Yup.string()
-      .min(2, "Too Short!")
-      .max(50, "Too Long!")
-      .required("Required"),
-    email: Yup.string().email("Invalid email").required("Required"),
     name: Yup.string()
       .min(2, "Your name is too short")
       .required("Please enter your full name"),
+    email: Yup.string()
+      .required("Please enter a valid email")
+      .email()
+      .label("Email"),
+    password: Yup.string()
+      .required()
+      .min(6, "Password must have at least 6 characters")
+      .label("Password"),
   });
   //Refs
   const passwordRef = useRef();
   const emailRef = useRef();
   //States
-  const [email, setEmail] = useState();
-  const [name, setName] = useState();
-  const [password, setPassword] = useState();
+  //const [email, setEmail] = useState();
+  //const [name, setName] = useState();
+  //const [password, setPassword] = useState();
   const [loading, setLoading] = useState(false);
+  const [passwordVisibility, setPasswordVisibility] = useState(true);
+  const [rightIcon, setRightIcon] = useState("eye");
+  const [passwordIcon, setPasswordIcon] = useState("eye");
+
+  const [registerError, setRegisterError] = useState("");
 
   //Context
   const firebase = useContext(FirebaseContext);
   const [_, setUser] = useContext(UserContext);
 
+  //Password Visibility
+  const handlePasswordVisibility = () => {
+    if (rightIcon === "eye") {
+      setRightIcon("eye-off");
+      setPasswordVisibility(!passwordVisibility);
+    } else if (rightIcon === "eye-off") {
+      setRightIcon("eye");
+      setPasswordVisibility(!passwordVisibility);
+    }
+  };
   //SignUp
-  const signUp = async () => {
+  // const SignUp = async (values, action) => {
+  //   setLoading(true);
+  //   const { email, password, name } = values;
+  //   try {
+  //     const createdUser = await registerWithEmail(email, password, name);
+  //     setUser({ ...createdUser, isLoggedIn: true });
+  //   } catch (error) {
+  //     setRegisterError(error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  const signUp = async (values, action) => {
     setLoading(true);
 
-    const user = { name, email, password };
+    //const { name, email, password } = user;
+    // console.log(user);
+
+    //const values = { email, password, name };
 
     try {
-      const createdUser = await firebase.createUser(user);
+      const createdUser = await firebase.createUser(values);
 
       setUser({ ...createdUser, isLoggedIn: true });
     } catch (error) {
@@ -65,152 +100,80 @@ const SignUp = ({ navigation }) => {
 
   //Footer Component
   const footer = (
-    <>
-      {loading && <Loading />}
-      {!loading && (
-        <AuthFooter
-          Name="Create Account"
-          Message="Already have an account?"
-          onPress={() => signUp()}
-          action="Sign In"
-          navigate={() => navigation.navigate("Login")}
-        />
-      )}
-    </>
+    <AuthFooter
+      Name="Create Account"
+      Message="Already have an account?"
+      onPress={() => signUp()}
+      action="Sign In"
+    />
   );
+  //values.email, values.password, values.name
   return (
     <AuthContainer
+      {...{ footer }}
       text="Create account"
       description1="Welcome,"
       description2="Create an account to continue"
-      {...{ footer }}
     >
-      <Formik
+      <Form
         initialValues={{
           name: "",
           email: "",
           password: "",
-          passwordConfirmation: "",
-        }}
-        onSubmit={(values) => {
-          setName(values.name);
-          setEmail(values.email);
-          setPassword(values.password);
         }}
         validationSchema={SignUpSchema}
+        onSubmit={(values) => signUp(values)}
       >
-        {({
-          handleChange,
-          values,
-          handleSubmit,
-          setFieldValue,
-          handleBlur,
-          errors,
-          touched,
-        }) => (
-          <View>
-            <View>
-              <AuthTextInput
-                primaryColor={colors.primary}
-                placeholderColor={colors.placeholder}
-                TextColor={colors.text}
-                placeholder="Name"
-                onChangeText={handleChange("name")}
-                onBlur={handleBlur("name")}
-                error={errors.name}
-                touched={touched.name}
-                autoCompleteType="name"
-                autoCapitalize="words"
-                returnKeyType="next"
-                returnKeyLabel="next"
-                keyboardAppearance="default"
-                keyboardType="default"
-                onSubmitEditing={() => {
-                  emailRef.current.focus();
-                }}
-              />
-              <Text
-                style={{
-                  color: "red",
-                  marginTop: 5,
-                  textAlign: "right",
-                  marginRight: 25,
-                }}
-              >
-                {touched.email && errors.name}
-              </Text>
-            </View>
-            <View>
-              <AuthTextInput
-                ref={emailRef}
-                primaryColor={colors.primary}
-                placeholderColor={colors.placeholder}
-                TextColor={colors.text}
-                placeholder="Email"
-                onChangeText={handleChange("email")}
-                onBlur={handleBlur("email")}
-                error={errors.email}
-                touched={touched.email}
-                autoCompleteType="email"
-                autoCapitalize="none"
-                returnKeyType="next"
-                returnKeyLabel="next"
-                keyboardAppearance="default"
-                keyboardType="email-address"
-                onSubmitEditing={() => {
-                  passwordRef.current.focus();
-                }}
-              />
-              <Text
-                style={{
-                  color: "red",
-                  marginTop: 5,
-                  textAlign: "right",
-                  marginRight: 25,
-                }}
-              >
-                {touched.email && errors.email}
-              </Text>
-            </View>
-            <View>
-              <AuthTextInput
-                ref={passwordRef}
-                primaryColor={colors.primary}
-                placeholderColor={colors.placeholder}
-                TextColor={colors.text}
-                placeholder="Password"
-                onChangeText={handleChange("password")}
-                onBlur={handleBlur("password")}
-                error={errors.password}
-                touched={touched.password}
-                autoCompleteType="password"
-                autoCapitalize="none"
-                secureTextEntry
-                returnKeyType="done"
-                returnKeyLabel="done"
-                keyboardAppearance="default"
-                onSubmitEditing={() => {
-                  handleSubmit();
-                }}
-              />
-              <Text
-                style={{
-                  color: "red",
-                  marginTop: 5,
-                  textAlign: "right",
-                  marginRight: 25,
-                }}
-              >
-                {touched.email && errors.password}
-              </Text>
-            </View>
-
-            {/* Terms and Conditions */}
+        <View>
+          <View style={{ alignItems: "center" }}>
+            <FormField
+              name="name"
+              leftIcon="account"
+              placeholder="Enter name"
+              autoFocus={false}
+            />
           </View>
-        )}
-      </Formik>
+          <View style={{ alignItems: "center" }}>
+            <FormField
+              name="email"
+              leftIcon="email"
+              placeholder="Enter email"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+            />
+          </View>
+          <View style={{ alignItems: "center" }}>
+            <FormField
+              name="password"
+              leftIcon="lock"
+              placeholder="Password"
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={passwordVisibility}
+              textContentType="password"
+              rightIcon={rightIcon}
+              handlePasswordVisibility={handlePasswordVisibility}
+            />
+          </View>
+          {<FormErrorMessage error={registerError} visible={true} />}
+        </View>
+        <View style={styles.Footer}>
+          {loading && <Loading />}
+          {!loading && <FormButton title={"Create Account"} />}
+        </View>
+      </Form>
     </AuthContainer>
   );
 };
 
 export default SignUp;
+
+const styles = StyleSheet.create({
+  Footer: {
+    //flex: 1,
+    justifyContent: "flex-end",
+    marginBottom: 36,
+    alignItems: "center",
+  },
+});

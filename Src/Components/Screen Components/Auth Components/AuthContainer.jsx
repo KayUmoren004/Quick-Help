@@ -41,30 +41,32 @@ const AuthContainer = ({
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{
-          flex: 1,
-        }}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={{
               flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
             }}
           >
-            <Image
-              source={require("../../../../assets/LogoBg.png")}
-              style={[styles.image, { resizeMode: "contain" }]}
-            />
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Image
+                source={require("../../../../assets/LogoBg.png")}
+                style={[styles.image, { resizeMode: "contain" }]}
+              />
 
-            <View style={styles.Children}>{children}</View>
-            <View style={styles.Footer}>{footer}</View>
-          </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+              <View style={styles.Children}>{children}</View>
+            </View>
+          </KeyboardAvoidingView>
+          <View style={styles.Footer}>{footer}</View>
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
@@ -78,7 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   image: {
-    height: "20%",
+    height: "15%",
     marginHorizontal: 10,
     marginVertical: 5,
     width: width - 30,
@@ -114,7 +116,7 @@ const styles = StyleSheet.create({
     //alignItems: "center",
   },
   Footer: {
-    flex: 1,
+    //flex: 1,
     justifyContent: "flex-end",
     marginBottom: 36,
   },

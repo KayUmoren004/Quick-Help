@@ -3,9 +3,9 @@ const DarkTheme = {
   colors: {
     primary: "#000000",
     background: "#000000",
-    card: "#ffffff",
+    card: "#000000",
     text: "#ffffff",
-    border: "#ffffff",
+    border: "darkgrey",
     notification: "#ffffff",
     placeholder: "#3C3C43",
   },

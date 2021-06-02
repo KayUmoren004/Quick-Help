@@ -1,7 +1,14 @@
 import React, { useContext, useState } from "react";
 
 //Dependencies
-import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  Dimensions,
+} from "react-native";
 import AuthContainer from "../../../Components/Screen Components/Auth Components/AuthContainer";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -10,16 +17,28 @@ import { useTheme } from "@react-navigation/native";
 import AuthFooter from "../../../Components/Screen Components/Auth Components/AuthFooter";
 import { FirebaseContext } from "../../../Components/Context/Firebase/FirebaseContext";
 
+//Form
+import Form from "../../../Components/Screen Components/Forms/Form";
+import FormField from "../../../Components/Screen Components/Forms/FormField";
+import FormButton from "../../../Components/Screen Components/Forms/FormButton";
+import FormErrorMessage from "../../../Components/Screen Components/Forms/FormErrorMessage";
+
 const ForgotPassword = ({ navigation }) => {
   //Theme
   const { colors } = useTheme();
   //Forgot Password Schema
   const ForgotPasswordSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Required"),
+    email: Yup.string()
+      .label("Email")
+      .email("Enter a valid email")
+      .required("Please enter a registered email"),
   });
+
   //State
   //const [email, setEmail] = useState();
+  const [customError, setCustomError] = useState("");
   const [loading, setLoading] = useState();
+
   //Context
   const firebase = useContext(FirebaseContext);
 
@@ -52,12 +71,7 @@ const ForgotPassword = ({ navigation }) => {
   };
   //Footer Component
   const footer = (
-    <>
-      {loading && <Loading />}
-      {!loading && (
-        <AuthFooter Name="Reset Password" onPress={() => forgotPassword()} />
-      )}
-    </>
+    <AuthFooter action="Go Back" navigate={() => navigation.goBack()} />
   );
   return (
     <AuthContainer
@@ -65,99 +79,40 @@ const ForgotPassword = ({ navigation }) => {
       description1="Enter the email address associated with your account"
       {...{ footer }}
     >
-      <Formik
+      <Form
         initialValues={{ email: "" }}
-        onSubmit={(values) => {
-          forgotPassword(values);
-        }}
         validationSchema={ForgotPasswordSchema}
+        onSubmit={(values) => forgotPassword(values)}
       >
-        {({
-          handleChange,
-          values,
-          handleSubmit,
-          setFieldValue,
-          handleBlur,
-          errors,
-          touched,
-        }) => (
-          <View style={styles.container}>
-            <View>
-              <View style={styles.TextContainer}>
-                <Text style={[styles.Text, { color: colors.text }]}>
-                  Reset your password
-                </Text>
-              </View>
-              <View style={styles.DescriptionContainer}>
-                <Text style={[styles.Description, { color: colors.text }]}>
-                  Enter the email address associated with your account
-                </Text>
-              </View>
-            </View>
-            <AuthTextInput
-              primaryColor={colors.primary}
-              placeholderColor={colors.placeholder}
-              TextColor={colors.text}
-              placeholder="Email"
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              error={errors.email}
-              touched={touched.email}
-              autoCompleteType="email"
+        <View>
+          <View style={{ alignItems: "center" }}>
+            <FormField
+              name="email"
+              leftIcon="email"
+              placeholder="Enter email"
               autoCapitalize="none"
-              returnKeyType="done"
-              returnKeyLabel="done"
-              keyboardAppearance="default"
               keyboardType="email-address"
-              onSubmitEditing={() => handleSubmit()}
+              textContentType="emailAddress"
+              autoFocus={false}
             />
-            <Text
-              style={{
-                color: "red",
-                marginTop: 5,
-                textAlign: "right",
-                marginRight: 25,
-              }}
-            >
-              {touched.email && errors.email}
-            </Text>
           </View>
-        )}
-      </Formik>
+          {<FormErrorMessage error={customError} visible={true} />}
+        </View>
+        <View style={styles.Footer}>
+          {loading && <Loading />}
+          {!loading && <FormButton title={"Reset Password"} />}
+        </View>
+      </Form>
     </AuthContainer>
   );
 };
 
-export const styles = StyleSheet.create({
-  container: {
+const styles = StyleSheet.create({
+  Footer: {
     //flex: 1,
+    justifyContent: "flex-end",
+    marginBottom: 36,
     alignItems: "center",
-    justifyContent: "center",
-  },
-  Text: {
-    width: 343,
-    height: 41,
-    fontWeight: "700",
-    fontSize: 34,
-    lineHeight: 41,
-    textAlign: "center",
-    marginHorizontal: 16,
-  },
-  Description: {
-    width: 343,
-    height: 44,
-    marginHorizontal: 16,
-    fontWeight: "400",
-    fontSize: 17,
-    lineHeight: 22,
-    textAlign: "center",
-  },
-  TextContainer: {
-    marginTop: 35,
-  },
-  DescriptionContainer: {
-    marginTop: 16,
-    marginBottom: 40,
   },
 });
 
